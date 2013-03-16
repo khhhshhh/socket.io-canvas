@@ -1,0 +1,9 @@
+#wrapper {
+	border:solid 1px #ccc;
+	width:1024px; 
+	height:600px;
+	margin:0 auto;
+	position:relative;
+	left:0px;
+	top:0px;
+}
