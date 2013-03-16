@@ -86,18 +86,52 @@ animate.start({
 });  
 collision.collideAll();
 collision.addMap('ball','ball',bounce);
+animate.addSprite({
+	move: function() {
+		io.sockets.in('game').emit('animate');
+	}
+});
+
+var keyEvent = {
+	// left
+	'37': function(sprite) {},
+	//up
+	'38': function(sprite) {},
+	//right
+	'39': function(sprite) {},
+	//down
+	'40': function(sprite) {}
+};
 
 module.exports = function(server) {
 	io = io.listen(server);
 	io.set('log level', 0);
 	io.sockets.on('connection', function(socket) {
-		socket.emit('new player', socket.id);
+		
 		socket.join('game');
+
+		socket.broadcast.emit('new player', socket.id);
+		
+		var players = io.sockets.clients('game');
+
+		for(var i = 0, len = players.length; i < len; i++) {
+			socket.emit('new player', players[i].id);
+		}
+
 		var ball = addBall();
+
 		ball.socket = socket;
+
+		socket.send(socket.id);
+
 		socket.on('disconnect', function() {
+			io.sockets.in('game').emit('player leave', socket.id);
 			ball.destory();
 			ball = null;
+		});
+
+		socket.on('keyCode', function(keyCode) {
+			keyEvent[keyCode](ball);
 		});
 	});
 };

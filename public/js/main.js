@@ -67,19 +67,52 @@ var addBall = function(){
 }
 
 var socket = io.connect();
+playerManager = (function() {
+	var players = [];
+	return {
+		addPlayer: function(id) {
+			return players[id] = addBall();
+		},
+		removePlayer: function(id) {
+			players[id].stopAnimate();
+			delete players[id];
+		},
+		find: function(id) {
+			return players[id];
+		},
+		sync: function(id, info) {
+			players[id].set(info) 
+		}
+	};
+})();
 
 socket.on('new player', function(id) {
 	console.log(id);
+	playerManager.addPlayer(id);
 });
 
 socket.on('player leave', function(id) {
 	console.log(id);
+	playerManager.removePlayer(id);
 });
 
 socket.on('connect', function(id) {
-	socket.sprite = addBall();
+	//socket.sprite = playerManager.addPlayer(id);
 });
+
+socket.on('message', function(id) {
+	socket.id = id;
+});
+
 socket.on('sync', function(id, info) {
-	socket.sprite.set(info);
+	playerManager.sync(id, info);
+});
+
+socket.on('animate', function(id, info) {
 	animate.animation();
+});
+
+$(document.body).live('keydown', function(event) {
+	console.log(event.keyCode);
+	socket.emit('keydown', event.keyCode);
 });
