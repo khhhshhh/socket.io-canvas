@@ -87,12 +87,10 @@ playerManager = (function() {
 })();
 
 socket.on('new player', function(id) {
-	console.log(id);
 	playerManager.addPlayer(id);
 });
 
 socket.on('player leave', function(id) {
-	console.log(id);
 	playerManager.removePlayer(id);
 });
 
@@ -113,6 +111,7 @@ socket.on('animate', function(id, info) {
 });
 
 $(document.body).live('keydown', function(event) {
+	event.preventDefault();
 	console.log(event.keyCode);
 	socket.emit('keydown', event.keyCode);
 });

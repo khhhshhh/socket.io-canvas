@@ -70,7 +70,7 @@ function addBall(){
 		maxX: scrollWidth - radius * 2,
 		maxY: scrollHeight - radius * 2, 
 		vector: vector(Math.random() * 6 - 3, 0),
-		accelerator: vector(0, 0.5),
+		accelerator: vector(0, 0),
 		radius: radius
 	});
 	ball.animate();
@@ -92,15 +92,30 @@ animate.addSprite({
 	}
 });
 
+var pace = 0.3;
+var max = 1;
+var min = -1;
 var keyEvent = {
 	// left
-	'37': function(sprite) {},
+	'37': function(sprite) {
+		sprite.vector.vx -= pace;
+		console.log(sprite.x);
+	},
 	//up
-	'38': function(sprite) {},
+	'38': function(sprite) {
+		sprite.vector.vy -= pace;
+		console.log(sprite.y);
+	},
 	//right
-	'39': function(sprite) {},
+	'39': function(sprite) {
+		sprite.vector.vx += pace;
+		console.log(sprite.x);
+	},
 	//down
-	'40': function(sprite) {}
+	'40': function(sprite) {
+		sprite.vector.vy += pace;
+		console.log(sprite.y);
+	}
 };
 
 module.exports = function(server) {
@@ -130,8 +145,10 @@ module.exports = function(server) {
 			ball = null;
 		});
 
-		socket.on('keyCode', function(keyCode) {
-			keyEvent[keyCode](ball);
+		socket.on('keydown', function(keyCode) {
+			if(keyEvent[keyCode]) {
+				keyEvent[keyCode](ball);
+			}
 		});
 	});
 };
