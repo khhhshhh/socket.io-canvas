@@ -37,7 +37,7 @@ var canvas = document.getElementById('canvas')
 // init animation's area
 animate.configure({
 	ctx: ctx,
-	width: 500,
+	width: 1024,
 	height: 630,
 	style: '#000'
 });  

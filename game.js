@@ -6,7 +6,7 @@ var sprite = require('./animation/sprite.js')
 ,	bounce = sprite.bounce
 ,	collision = sprite.collision
 ,	players = []
-,	scrollWidth = 500
+,	scrollWidth = 1024
 ,	scrollHeight = 630;
 
 var bouncyBall = function(params) {
@@ -92,29 +92,30 @@ animate.addSprite({
 	}
 });
 
-var pace = 0.3;
-var max = 1;
-var min = -1;
+var pace = 1;
+var max = 6;
+function go(vect, direct) {
+	if(vect * direct < 0) vect = 2 * direct;
+	vect += direct * pace;
+	return Math.abs(vect) > max ? max * direct : vect;
+	//return max * direct;
+};
 var keyEvent = {
 	// left
 	'37': function(sprite) {
-		sprite.vector.vx -= pace;
-		console.log(sprite.x);
+		sprite.vector.vx = go(sprite.vector.vx, -1);
 	},
 	//up
 	'38': function(sprite) {
-		sprite.vector.vy -= pace;
-		console.log(sprite.y);
+		sprite.vector.vy = go(sprite.vector.vy, -1);
 	},
 	//right
 	'39': function(sprite) {
-		sprite.vector.vx += pace;
-		console.log(sprite.x);
+		sprite.vector.vx = go(sprite.vector.vx, 1);
 	},
 	//down
 	'40': function(sprite) {
-		sprite.vector.vy += pace;
-		console.log(sprite.y);
+		sprite.vector.vy = go(sprite.vector.vy, 1);
 	}
 };
 
