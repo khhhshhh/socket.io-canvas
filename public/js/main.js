@@ -111,7 +111,13 @@ socket.on('animate', function(id, info) {
 });
 
 $(document.body).live('keydown', function(event) {
-	event.preventDefault();
-	console.log(event.keyCode);
-	socket.emit('keydown', event.keyCode);
+	var key =  event.keyCode;
+	if(key == 37 ||
+	   key == 38 ||
+	   key == 39 ||
+	   key == 40 ) {
+		event.preventDefault();
+		console.log(event.keyCode);
+		socket.emit('keydown', event.keyCode);
+	}
 });
